@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cmath>
 using namespace std;
 
 int main()
@@ -7,5 +7,5 @@ int main()
 
     long long a, b;
     cin >> a >> b;
-    cout << ((a - b > 0) ? (a - b) : -(a - b));
+    cout << abs(a - b);
 }
