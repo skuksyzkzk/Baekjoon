@@ -1,7 +1,6 @@
-#include <iostream>
-using namespace std;
+#import <cstdio>
 
-int main()
+main()
 {
     puts("\\    /\\\n )  ( ')\n(  /  )\n \\(__)|");
     return 0;
