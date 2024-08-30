@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -10,18 +9,16 @@ int main()
     cout.tie(0);
 
     int n, x;
-    int input;
-    vector<int> v;
+    int arr[10000];
     cin >> n >> x;
     for (int i = 0; i < n; i++)
     {
-        cin >> input;
-        v.push_back(input);
+        cin >> arr[i];
     }
     for (int j = 0; j < n; j++)
     {
-        if (v[j] < x)
-            cout << v[j] << " ";
+        if (arr[j] < x)
+            cout << arr[j] << " ";
     }
 
     return 0;
