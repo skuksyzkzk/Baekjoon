@@ -1,13 +1,14 @@
 #include <iostream>
 using namespace std;
 // A＠B = (A+B)×(A-B)
-int alpha(int a, int b)
+long long alpha(long long a, long long b)
 {
     return (a + b) * (a - b);
 }
 int main()
 {
-    int a, b;
+    long long a, b;
     cin >> a >> b;
     cout << alpha(a, b);
+    return 0;
 }
