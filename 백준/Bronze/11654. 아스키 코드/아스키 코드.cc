@@ -1,11 +1,8 @@
-#include <iostream>
-
-using namespace std;
-
+#include <cstdio>
 int main()
 {
     char c;
-    cin >> c;
-    cout << (int)c;
+    scanf("%c", &c);
+    printf("%d", c);
     return 0;
 }
