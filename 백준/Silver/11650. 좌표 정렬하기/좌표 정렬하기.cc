@@ -19,6 +19,7 @@ bool cmp2(point a, point b) {
 	return a.x < b.x;  // x가 다르면 x를 비교
 }
 int main() {
+    ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	int n;
 	point p[100001];
 	cin >> n;
