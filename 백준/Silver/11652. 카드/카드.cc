@@ -1,5 +1,5 @@
 #include<iostream>
-#include <map>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -9,26 +9,29 @@ int main() {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	int N;
 	cin >> N;
-	map<long long, int> m;
+	
+	vector<long long> v(N,0);
 
 	for (int i = 0; i < N; i++) {
-		long long  input;
-		cin >> input;
-		m[input]++;
-		
+		cin >> v[i];
 	}
-	long long max_num = 0;
-	int max_value = 0;
-	
-	for (auto& z : m) {
-		if(z.second > max_value){
-			max_value = z.second;
-			max_num = z.first;
+
+	sort(v.begin(), v.end());
+
+	long long mx = 0, mx_num = 0;
+	long long result = v[0];
+
+	for (int j = 1; j < N; j++) {
+		if (v[j] == v[j - 1]) {
+			mx_num++;
+			if (mx_num > mx) {
+				mx = mx_num;
+				result = v[j];
+			}
 		}
+		else mx_num = 0;
 	}
 
-	cout << max_num;
-	
-
+	cout << result;
 	return 0;
 }
