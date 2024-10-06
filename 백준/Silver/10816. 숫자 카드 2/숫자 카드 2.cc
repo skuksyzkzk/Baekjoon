@@ -1,22 +1,23 @@
 #include <iostream>
-#include <map>
+#include <algorithm>
 
+int arr[500002];
 using namespace std;
 
-map <int, int> m;
-int N, M, card;
-
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); 
+	int N, M;
 	cin >> N;
+
 	for (int i = 0; i < N; i++) {
-		cin >> card;
-		m[card]++;
+		cin >> arr[i];
 	}
-	cin >> M;
-	for (int i = 0; i < M; i++) {
-		cin >> card;
-		cout << m[card] << " ";
+	
+	sort(arr, arr + N);
+	cin >> M; int inpu;
+	for (int j = 0; j < M; j++) {
+		cin >> inpu;
+		cout << upper_bound(arr, arr + N, inpu) - lower_bound(arr, arr + N, inpu) << " ";
 	}
+	return 0;
 }
