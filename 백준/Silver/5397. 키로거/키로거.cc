@@ -1,44 +1,38 @@
 #include <iostream>
-#include <list>
+#include <vector>
 #include <string>
-
+#include <algorithm>
+#include <list>
 using namespace std;
+int n;
 
 int main() {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	int N;
-	cin >> N;
-	for (int i = 0; i < N; i++) {
+	cin >> n;
+	for (int i = 0; i < n; i++) {
 		string str;
+		list<char> lst;
 		cin >> str;
-		int size = str.length();
+		auto it = lst.begin(); // 커서 맨뒤 
+		for (int j = 0; j < str.size(); j++) {
+			if (str[j] != '<' && str[j] != '>' && str[j] != '-')
+				lst.insert(it,str[j]);
 
-		list<char> l;
-		list<char>::iterator it = l.begin();
-		
-		for (int j = 0; j < size; j++) {
-			if (str[j] == '<') {
-				if (it != l.begin()) it--;
+			if (str[j] == '<' && it != lst.begin()) {
+				it--;
 			}
-			else if (str[j] == '>') {
-				if (it != l.end()) it++;
+			else if (str[j] == '>' && it!=lst.end()) {
+				it++;
 			}
-			else if (str[j] == '-') {
-				if (it != l.begin()) {
-					it--;
-					it = l.erase(it);
-				}
+			else if (str[j] == '-' && it!=lst.begin()) {
+				it--;
+				it = lst.erase(it);
 			}
-			else {
-				l.insert(it, str[j]);
-			}
+			
 		}
-		for (auto z : l) {
-			cout << z;
-		}
-		cout << '\n';
+		for (auto nxt : lst) cout << nxt;
+
+		cout << "\n";
 	}
-
-	
 	return 0;
 }
