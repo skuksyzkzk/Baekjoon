@@ -1,46 +1,34 @@
 #include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 #include <list>
-
+#include <queue>
 using namespace std;
+int n,k;
 
 int main() {
-	int N, K;
-	cin >> N >> K;
-
-	list<int> l;
-	for (int i = 1; i <= N; i++) {
-		l.push_back(i);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	cin >> n >> k;
+	queue<int> q;
+	for (int i = 1; i <= n; i++) {
+		q.push(i);
 	}
-
-	list<int>::iterator it = l.begin();
-
-	
 	cout << "<";
-	while (!l.empty()) {
-		int size = K - 1;
-		while (size--) {
-			it++;
-			if (it == l.end()) it = l.begin();
-		}
-
-		
-		for (list<int>::iterator t = l.begin(); t != l.end(); t++) {
-			if (l.size() == 1) {
-				cout << *it << ">";
+	while (q.size() > 1) {
+		for (int i = 0; i < k; i++) {
+			if (i == k - 1) {
+				cout << q.front() << ", ";
+				q.pop();
 			}
-			else if (t == it) {
-				cout << *it << ", ";
+			else {
+				q.push(q.front());
+				q.pop();
 			}
 
 		}
-		it = l.erase(it);
-		
-		if (it == l.end()) {
-			it = l.begin();
-		}
-		
+
 	}
-
-	
+	cout << q.front() << ">";
 	return 0;
 }
