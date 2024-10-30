@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.*;
 
 public class Solution {
 
@@ -23,9 +23,25 @@ public class Solution {
                 total -= challenger[i]; // ❻ 다음 스테이지 실패율을 구하기 위해 현재 스테이지의 인원을 뺌
             }
         }
-
+        
+        ArrayList<Map.Entry<Integer, Double>> arr = new ArrayList<>(fails.entrySet());
+        
+        Collections.sort(arr, (a,b) -> {
+            if(a.getValue() == b.getValue()){
+                return Double.compare(a.getKey(), b.getKey());    
+            }
+            else{
+                return Double.compare(b.getValue(), a.getValue());    
+            }
+        });
+         
+        int[] arr2 = new int[arr.size()];
+        
+        for(int i=0; i<arr.size(); i++){
+            arr2[i] = arr.get(i).getKey();
+        }
         // ❼ 실패율이 높은 스테이지부터 내림차순으로 정렬
-        return fails.entrySet().stream().sorted((o1, o2) -> Double.compare(o2.getValue(), o1.getValue())).mapToInt(HashMap.Entry::getKey).toArray();
+        return arr2;
     }
 
 }
