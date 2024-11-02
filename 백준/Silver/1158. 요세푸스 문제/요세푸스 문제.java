@@ -17,22 +17,20 @@ public class Main {
         for (int i = 1;i <= n; i++){
             q.addLast(i);
         }
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        bw.write("<");
-        bw.flush();
+        StringBuilder sb = new StringBuilder();
+        sb.append("<");
         for (int i = 0; i < n;i++){
             if (q.size() == 1) break;
             for (int j = 0; j < k-1; j++){
                 int temp = q.pollFirst();
                 q.addLast(temp);
             }
-            bw.write(q.pollFirst() + ", ");
-            bw.flush();
+            sb.append(q.pollFirst() + ", ");
         }
-        bw.flush();
-        bw.write(q.pollFirst() +">");
-        bw.flush();
+        sb.append(q.pollFirst()+">");
+
+        System.out.println(sb.toString());
+
     }
 
 }
