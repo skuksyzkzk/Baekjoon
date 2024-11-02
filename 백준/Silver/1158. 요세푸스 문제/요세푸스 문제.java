@@ -1,5 +1,6 @@
 
 
+
 import java.io.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,21 +14,19 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int k = Integer.parseInt(st.nextToken());
 
-        ArrayDeque<Integer> q = new ArrayDeque<>();
+        List<Integer> list = new ArrayList<>();
         for (int i = 1;i <= n; i++){
-            q.addLast(i);
+            list.add(i);
         }
         StringBuilder sb = new StringBuilder();
         sb.append("<");
-        for (int i = 0; i < n;i++){
-            if (q.size() == 1) break;
-            for (int j = 0; j < k-1; j++){
-                int temp = q.pollFirst();
-                q.addLast(temp);
-            }
-            sb.append(q.pollFirst() + ", ");
+
+        int idx = 0;
+        while(list.size() > 1) {
+            idx = (idx + (k - 1)) % list.size();
+            sb.append(list.remove(idx) + ", ");
         }
-        sb.append(q.pollFirst()+">");
+        sb.append(list.get(0)+">");
 
         System.out.println(sb.toString());
 
