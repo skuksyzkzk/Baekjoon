@@ -59,13 +59,16 @@ class Main {
             }
         }
         int flag = 1;
+        StringBuilder sb =new StringBuilder();
+
         for (int i : dist){
             if (flag == 1){
                 flag = 2;
                 continue;
             }
-            if (i == Integer.MAX_VALUE) System.out.println("INF");
-            else System.out.println(i);
+            if (i == Integer.MAX_VALUE) sb.append("INF\n");
+            else sb.append(i+"\n");
         }
+        System.out.println(sb);
     }
 }
