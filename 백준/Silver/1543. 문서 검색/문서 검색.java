@@ -10,13 +10,12 @@ public class Main {
 		String given = br.readLine();
 		String target = br.readLine();
 		
-		int lastIdx = -1;
 		int dif = target.length();
 		int offset = dif - 1;
 		int count = 0;
 		for (int i = 0; i<= given.length() - dif; i++) {
-			if(target.equals(given.substring(i,i+dif)) && lastIdx < i) {
-				lastIdx = i + offset;
+			if(target.equals(given.substring(i,i+dif))) {
+				i += offset;
 				count++;
 			}
 		}
