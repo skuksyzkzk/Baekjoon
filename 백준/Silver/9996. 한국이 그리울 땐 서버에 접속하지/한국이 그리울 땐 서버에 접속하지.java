@@ -16,9 +16,8 @@ public class Main {
 	
 		for (int i = 0 ; i< N ; i++) {
 			String pb = br.readLine();
-			if ( pb.length() >= first.length() + second.length() && 
-					first.equals(pb.substring(0,first.length()))&&
-					second.equals(pb.substring(pb.length()-second.length(),pb.length())) ) {
+			if ( pb.length() >= first.length() + second.length() &&
+					pb.startsWith(first) && pb.endsWith(second)) {
 				sb.append("DA\n");
 			}else sb.append("NE\n");
 		}
