@@ -10,15 +10,8 @@ public class Main {
 		String given = br.readLine();
 		String target = br.readLine();
 		
-		int dif = target.length();
-		int offset = dif - 1;
-		int count = 0;
-		for (int i = 0; i<= given.length() - dif; i++) {
-			if(target.equals(given.substring(i,i+dif))) {
-				i += offset;
-				count++;
-			}
-		}
-		System.out.println(count);
+		int total = given.length();
+		given = given.replace(target,"");
+		System.out.println((total - given.length()) / target.length());
 	}
 }
