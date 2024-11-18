@@ -18,9 +18,7 @@ class Solution {
                 dp[i][j] = board[i][j] + Math.max(dp[i-1][j],dp[i-1][j-1]);
             }
         }
-        for (int i = 1; i<=N;i++){
-            answer = Math.max(answer,dp[N][i]);
-        }
-        return answer;
+        
+        return Arrays.stream(dp[N]).max().getAsInt();
     }
 }
