@@ -24,13 +24,7 @@ public class Main{
 			}
 		}
 		// 이제 남은것은 최대 값만 구하면 끝 
-		int maxValue = 0;
-		for (int [] i : lcs) {
-			for (int j : i) {
-				if (maxValue < j) maxValue = j;
-			}
-		}
-		System.out.println(maxValue);
+		System.out.println(lcs[first.length][second.length]);
 	}
 
 }
