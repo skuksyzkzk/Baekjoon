@@ -26,9 +26,7 @@ public class Main{
 			lis[i] = maxValue + 1;
 		}
 		int maxNum = 0 ;
-		for (int i: lis) {
-			maxNum = Math.max(maxNum, i);
-		}
+		maxNum = Arrays.stream(lis).max().getAsInt();
 		System.out.println(maxNum);
 		
 	}
