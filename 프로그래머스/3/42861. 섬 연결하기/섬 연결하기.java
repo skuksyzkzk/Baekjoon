@@ -30,18 +30,17 @@ class Solution {
         Arrays.sort(costs, (a,b) -> Integer.compare(a[2],b[2]));
         // 최소 비용을 선택하는 데 둘의 루트가 다르면 union
         for (int[] edge : costs){
+            if (edges == n-1) break;
+            
             int aRoot = find(edge[0]);
             int bRoot = find(edge[1]);
             
             if (aRoot != bRoot){
                 union(aRoot,bRoot);
-                
                 edges++;
                 answer += edge[2];
             }
         }
-        
-       
         return answer;
     }
 }
