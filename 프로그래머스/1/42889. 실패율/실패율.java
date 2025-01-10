@@ -1,47 +1,61 @@
 import java.util.*;
 
-public class Solution {
-
-    public int[] solution(int N, int[] stages) {
-        // ❶ 스테이지별 도전자 수를 구함
-        int[] challenger = new int[N + 2];
-        for (int i = 0; i < stages.length; i++) {
-            challenger[stages[i]] += 1;
+class Solution {
+    class Stage implements Comparable<Stage>{
+        int number;
+        double percent;
+        public Stage(int number,double percent){
+            this.number = number;
+            this.percent = percent;
         }
-
-        // ❷ 스테이지별 실패한 사용자 수 계산
-        HashMap<Integer, Double> fails = new HashMap<>();
-        double total = stages.length;
-
-        // ❸ 각 스테이지를 순회하며, 실패율 계산
-        for (int i = 1; i <= N; i++) {
-            if (challenger[i] == 0) { // ❹ 도전한 사람이 없는 경우, 실패율은 0
-                fails.put(i, 0.);
+        @Override
+        public int compareTo(Stage other){
+            if (Double.compare(this.percent,other.percent) == 0) {
+                return Integer.compare(this.number,other.number);
+            }
+            return Double.compare(other.percent,this.percent);
+        }
+    }
+    // 실패율이 같은 스테이지가 있다면 작은 번호의 스테이지가 먼저 옴 
+    // 스테이지에 도달한 유저가 없다면 실패율 0으로 정의
+    
+    public int[] solution(int N, int[] stages) {
+        ArrayList<Integer> answer = new ArrayList<>();
+        // 실패율이 높은 스테이지 부터 내림 차순으로 스테이지 번호 return 
+        PriorityQueue<Stage> pq = new PriorityQueue<>();
+        Arrays.sort(stages);
+        int total = stages.length;
+        int[] dist = new int[N+1];
+        // stages 배열을 차라리 내림차순으로 정렬한다음 
+        // stages 보다 큰 수가 나오면 index 계산 멈추기 index / Stages.length
+        for (int i = 1; i <= N; i++){
+            int sol = binarySearchUpper(stages,i);
+            dist[i] = sol;
+            int diff = (dist[i] - dist[i-1]);
+            // 실패를 안한 것
+            if (diff == 0) {
+                pq.add(new Stage(i,0));
             }
             else {
-                fails.put(i, challenger[i] / total); // ❺ 실패율 구함
-                total -= challenger[i]; // ❻ 다음 스테이지 실패율을 구하기 위해 현재 스테이지의 인원을 뺌
+                double pct = (double) diff / total;
+                pq.add(new Stage(i,pct));
             }
+            total -= diff;
+            
         }
-        
-        ArrayList<Map.Entry<Integer, Double>> arr = new ArrayList<>(fails.entrySet());
-        
-        Collections.sort(arr, (a,b) -> {
-            if(a.getValue() == b.getValue()){
-                return Double.compare(a.getKey(), b.getKey());    
-            }
-            else{
-                return Double.compare(b.getValue(), a.getValue());    
-            }
-        });
-         
-        int[] arr2 = new int[arr.size()];
-        
-        for(int i=0; i<arr.size(); i++){
-            arr2[i] = arr.get(i).getKey();
+        while (!pq.isEmpty()){
+            Stage cur = pq.poll();
+            answer.add(cur.number);
         }
-        // ❼ 실패율이 높은 스테이지부터 내림차순으로 정렬
-        return arr2;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
-
+    public int binarySearchUpper(int[] arr,int find){
+        int left = 0 ; int right = arr.length;
+        while (left < right){
+            int mid = (left+right) / 2 ;
+            if (arr[mid] > find) right = mid;
+            else if (arr[mid] <= find) left = mid+1;
+        }
+        return left;
+    }
 }
