@@ -1,56 +1,54 @@
 import java.util.*;
 
 class Solution {
-    class Song {
+    // 필요한 속성: 장르, 재생수 , 고유 번호 
+    class Song implements Comparable<Song> {
+        String genre;
+        int play;
         int number;
-        int plays;
         
-        public Song(int number,int plays){
+        public Song (String genre,int play,int number){
+            this.genre = genre;
+            this.play = play;
             this.number = number;
-            this.plays = plays;
+        }
+        @Override
+        public int compareTo(Song other){
+            // 플레이 수가 같으면 고유번호가 낮은거 먼저
+            if (this.play == other.play){
+                return Integer.compare(this.number,other.number);
+            }
+            return Integer.compare(other.play,this.play);
         }
     }
-    static Comparator<Song> comp  = new Comparator<Song> () {
-        
-        @Override
-        public int compare(Song a, Song b){
-            if (a.plays == b.plays) return a.number - b.number;
-            return b.plays - a.plays;
-        }
-        
-    };
     public int[] solution(String[] genres, int[] plays) {
-        List<Integer> answer = new ArrayList<>();
+        ArrayList<Integer> answer = new ArrayList<>();
         HashMap<String,Integer> map = new HashMap<>();
-        // 인기 장르 고르기 
-        for (int i = 0; i < genres.length;i++){
-            map.put(genres[i], map.getOrDefault(genres[i],0) + plays[i]);
-        }
-        // 내림차순 정리 
-        ArrayList<Map.Entry<String, Integer>> arr = new ArrayList<>(map.entrySet());
-        
-        Collections.sort(arr, (a,b) -> {
-            return Integer.compare(b.getValue(),a.getValue());
-        });
-        
-        for (int i = 0 ; i < map.size(); i ++){
-            String genre = arr.get(i).getKey();
-            List<Song> cur = new ArrayList<>();
-            for (int st = 0; st < genres.length; st++){
-                if (genre.equals(genres[st])){
-                    Song temp = new Song(st,plays[st]);
-                    cur.add(temp);
-                }
-            }
-            Collections.sort(cur,comp);
-            if (cur.size() < 2){
-                answer.add(cur.get(0).number);
-            }else {
-                answer.add(cur.get(0).number);
-                answer.add(cur.get(1).number);
-            }
+        HashMap<String,ArrayList<Song>> list = new HashMap<>();
+        // 장르의 플레이수 합 구하기
+        for (int i = 0 ; i < genres.length;i++){
+            map.put(genres[i],map.getOrDefault(genres[i],0)+plays[i]);
             
+            list.putIfAbsent(genres[i], new ArrayList<>());
+            list.get(genres[i]).add(new Song(genres[i],plays[i],i));
         }
+        // 장르의 우선순위 정렬 
+        PriorityQueue<Song> sortedGenres = new PriorityQueue<>();
+        for (Map.Entry<String,Integer> entry : map.entrySet()){
+            sortedGenres.add(new Song(entry.getKey(),entry.getValue(),-1));
+        }
+        
+        while (!sortedGenres.isEmpty()){
+            Song cur = sortedGenres.poll();
+            
+            ArrayList<Song> songs = list.get(cur.genre);
+            Collections.sort(songs);
+            
+            for (int i = 0 ; i < Math.min(2,songs.size()); i++){
+                answer.add(songs.get(i).number);
+            }
+        }
+        
         
         return answer.stream().mapToInt(Integer::intValue).toArray();
     }
