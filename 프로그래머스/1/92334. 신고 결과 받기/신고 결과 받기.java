@@ -3,44 +3,43 @@ import java.util.stream.*;
 
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        // 이름 -> 신고당한 횟수 
-        HashMap<String,Integer> nameToCount = new HashMap<>();
-        // 이름 -> 신고한 사람
-        // 이렇게 해야지 동일한 유저 신고시 1번 처리 
-        HashMap<String, List<String>> nameToReporters = new HashMap<>();
+        int[] answer = new int[id_list.length];
         
-        for (int i = 0; i< report.length;i++){
-            String[] s = report[i].split(" ");
+        // 신고 내역 중복 제거
+        List<String> reportList = Arrays.stream(report).distinct().collect(Collectors.toList());
+        HashMap<String, ArrayList<String>> reporter = new HashMap<>();
+        HashMap<String, Integer> count = new HashMap<>();
+        
+        // 신고 처리
+        for (String rep : reportList) {
+            String[] inputs = rep.split(" ");
+            String reporterId = inputs[0];
+            String reportedId = inputs[1];
             
-            // Null Pointer 방지 
-            if (!nameToReporters.containsKey(s[1])){
-                nameToReporters.put(s[1],new ArrayList<>());
-            }
-            // 신고횟수 추가 -> 이때 이미 신고한 사람인지 확인 
-            if (!nameToReporters.get(s[1]).contains(s[0])){
-                nameToCount.put(s[1],nameToCount.getOrDefault(s[1],0) + 1);
-                nameToReporters.get(s[1]).add(s[0]);
-            }
+            // 신고한 사용자 기록
+            reporter.putIfAbsent(reporterId, new ArrayList<>());
+            reporter.get(reporterId).add(reportedId);
             
+            // 신고당한 사용자 카운트 증가
+            count.put(reportedId, count.getOrDefault(reportedId, 0) + 1);
         }
-        // 정지되는 사람 
-        List<String> stopper = nameToCount.entrySet().stream().
-            filter(entry -> entry.getValue() >= k).map(Map.Entry::getKey)
-            .collect(Collectors.toList());
-        // 정지되는 사람들을 신고한 사람들의 카운트 저장 
-        HashMap<String,Integer> last = new HashMap<>();
         
-        for (String s : stopper) {
-            for (String name : nameToReporters.get(s)){
-                last.put(name,last.getOrDefault(name,0)+1);
+        // 정지된 사용자 목록 추출
+        HashSet<String> bannedUsers = count.entrySet().stream()
+            .filter(entry -> entry.getValue() >= k)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
+        
+        // 결과 계산
+        for (int i = 0; i < id_list.length; i++) {
+            String userId = id_list[i];
+            for (String reportedId : reporter.getOrDefault(userId, new ArrayList<>())) {
+                if (bannedUsers.contains(reportedId)) {
+                    answer[i]++;
+                }
             }
         }
         
-        int[] answer = new int [id_list.length];
-        for ( int i = 0 ; i < id_list.length;i++){
-            if (last.containsKey(id_list[i])) answer[i] = last.get(id_list[i]);
-            else answer[i] = 0;
-        }
         return answer;
     }
 }
