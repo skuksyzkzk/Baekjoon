@@ -1,74 +1,77 @@
-
 import java.util.*;
 import java.io.*;
-class Node implements Comparable<Node> {
-    int dest,cost;
-    public Node(int dest,int cost){
-        this.dest = dest;
-        this.cost = cost;
-    }
-    @Override
-    public int compareTo(Node other){
-        return Integer.compare(this.cost,other.cost);
-    }
-}
+
 class Main {
-    private static int v,e,start;
-
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        st = new StringTokenizer(br.readLine());
-
-        v = Integer.parseInt(st.nextToken());
-        e = Integer.parseInt(st.nextToken());
-
-        start = Integer.parseInt(br.readLine());
-
-        ArrayList<Node>[] adjList = new ArrayList[v+1];
-        for (int i = 0 ; i<= v ; i++){
-            adjList[i] = new ArrayList<>();
-        }
-
-        for ( int i = 0; i < e; i++){
-            st = new StringTokenizer(br.readLine());
-
-            int source = Integer.parseInt(st.nextToken());
-            int dest = Integer.parseInt(st.nextToken());
-            int cost = Integer.parseInt(st.nextToken());
-
-            adjList[source].add(new Node(dest,cost));
-        }
-
-        int[] dist = new int[v+1];
-        Arrays.fill(dist,Integer.MAX_VALUE);
-        dist[start] = 0;
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.offer(new Node(start,0));
-
-        while (!pq.isEmpty()){
-            Node cur = pq.poll();
-
-            if (dist[cur.dest] < cur.cost) continue;
-
-            for (Node node : adjList[cur.dest]){
-                if (dist[node.dest] > cur.cost + node.cost){
-                    dist[node.dest] = cur.cost + node.cost;
-                    pq.offer(new Node(node.dest,dist[node.dest]));
-                }
-            }
-        }
-        int flag = 1;
-        StringBuilder sb =new StringBuilder();
-
-        for (int i : dist){
-            if (flag == 1){
-                flag = 2;
-                continue;
-            }
-            if (i == Integer.MAX_VALUE) sb.append("INF\n");
-            else sb.append(i+"\n");
-        }
-        System.out.println(sb);
-    }
+	
+	static class Edge implements Comparable<Edge>{
+		int dest,cost;
+		
+		public Edge (int dest,int cost) {
+			this.dest = dest;
+			this.cost = cost;
+		}
+		@Override
+		public int compareTo(Edge other) {
+			return Integer.compare(this.cost, other.cost);
+		}
+	}
+	static ArrayList<Edge>[] adj;
+	static int[] dist;
+	static int V;
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		V = Integer.parseInt(st.nextToken());
+		int E = Integer.parseInt(st.nextToken());
+		int start = Integer.parseInt(br.readLine());
+		
+		dist = new int[V+1];
+		adj = new ArrayList[V+1];
+		
+		for (int i = 0 ; i <= V; i++) {
+			adj[i] = new ArrayList<>();
+		}
+		for (int i = 0 ; i < E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int src = Integer.parseInt(st.nextToken());
+			int dest = Integer.parseInt(st.nextToken());
+			int cost = Integer.parseInt(st.nextToken());
+			
+			adj[src].add(new Edge(dest,cost));
+		}
+		Arrays.fill(dist, Integer.MAX_VALUE);
+		dijkstra(start);
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 1; i <= V; i++) {
+			if (dist[i] == Integer.MAX_VALUE) sb.append("INF\n");
+			else sb.append(dist[i]+"\n");
+		}
+		System.out.println(sb);
+	}
+	private static void dijkstra(int start) {
+		// TODO Auto-generated method stub
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		dist[start] = 0;
+		boolean[] visited = new boolean[V+1];
+		
+		pq.offer(new Edge(start,0));
+		
+		while (!pq.isEmpty()) {
+			Edge cur = pq.poll();
+			
+			if(visited[cur.dest]) continue;
+			
+			visited[cur.dest] = true;
+			
+			for (Edge next : adj[cur.dest]) {
+				if (dist[next.dest] > cur.cost + next.cost) {
+					dist[next.dest] = cur.cost + next.cost;
+					pq.offer(new Edge(next.dest,dist[next.dest]));
+				}
+			}
+		}
+		
+	}
+	
 }
