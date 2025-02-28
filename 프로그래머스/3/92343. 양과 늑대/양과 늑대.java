@@ -1,52 +1,56 @@
 import java.util.*;
 
 class Solution {
-    public static class Node {
-        int number, sheep, wolf;
-        HashSet<Integer> adj; // 인접한 노드들 저장
+    class Node {
+        int sheep, wolf, dest;
+        HashSet<Integer> notVisited;
         
-        public Node (int number,int sheep,int wolf, HashSet<Integer> adj){
-            this.number = number;
+        public Node (int sheep, int wolf, int dest,HashSet<Integer> notVisited){
             this.sheep = sheep;
             this.wolf = wolf;
-            this.adj = adj; 
+            this.dest = dest;
+            this.notVisited = notVisited;
         }
     }
-    public static ArrayList<Integer>[] tree;
+    static ArrayList<Integer>[] adj;
+    
     public int solution(int[] info, int[][] edges) {
-        int answer = 0;
-        // 트리 생성 
-        tree = new ArrayList[info.length];
+        int answer = 0; 
+        adj = new ArrayList[info.length];
+        
         for (int i = 0 ; i < info.length; i++){
-            tree[i] = new ArrayList<>();
+            adj[i] = new ArrayList<>();
         }
-        for (int i = 0 ; i < edges.length;i++){
-            tree[edges[i][0]].add(edges[i][1]);
+        
+        for (int[] e : edges){
+            adj[e[0]].add(e[1]);
         }
-        // BFS 
+        
         ArrayDeque<Node> q = new ArrayDeque<>();
-        q.offerLast(new Node(0,1,0,new HashSet<>()));
+        q.offer(new Node(1,0,0,new HashSet<>()));
         
         while (!q.isEmpty()){
-            Node cur = q.pollFirst();
+            Node cur = q.poll();
+            // 뽑았으면 그거와 답을 비교한다. 들어왔다는 것 자체가 양의 수가 많다는 것.
             answer = Math.max(answer,cur.sheep);
-            // 인접한 노드들 추가 
-            cur.adj.addAll(tree[cur.number]);
-       
-            for (int next : cur.adj){
-                HashSet<Integer> set = new HashSet<>(cur.adj);
-                // 사실 상 한번 방문한 것이므로 set에서 제거해서 넘겨줘야된다.
-                set.remove(next);
-                // 늑대일 경우 
-                if (info[next] == 1 && cur.sheep > cur.wolf + 1) 
-                    q.offerLast(new Node(next,cur.sheep,cur.wolf+1,set));
-                // 양일 경우
-                else if (info[next] == 0) 
-                    q.offerLast(new Node(next,cur.sheep+1,cur.wolf,set));
+            // 해당 간선을 추가해야됨 인접한 
+            cur.notVisited.addAll(adj[cur.dest]);
             
+            for (int next : cur.notVisited){
+                HashSet<Integer> newSet = new HashSet<>(cur.notVisited);
+                newSet.remove(next);
+                // 거기로 가면 양 <= 늑대면 가면 안됨 
+                // 거기가 늑대면 
+                if (info[next] == 1){
+                    if (cur.sheep <= cur.wolf + 1) continue;
+                    q.offer(new Node(cur.sheep,cur.wolf+1,next,newSet));
+                }
+                // 양이면 
+                else {
+                    q.offer(new Node(cur.sheep+1,cur.wolf,next,newSet));
+                }
             }
         }
-         
         return answer;
     }
 }
